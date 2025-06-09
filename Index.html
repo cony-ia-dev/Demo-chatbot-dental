@@ -1,0 +1,559 @@
+<artifact_identifier>dental-chatbot-demo</artifact_identifier>
+<artifact_type>text/html</artifact_type>
+<artifact_title>Demo Chatbot para Clínica Dental</artifact_title>
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Chatbot - Clínica Dental | Asistente Virtual 24/7</title>
+    <meta name="description" content="Prueba nuestro asistente virtual para clínicas dentales. Agenda citas, consulta horarios y maneja emergencias 24/7.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .demo-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(7, 94, 84, 0.95);
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .demo-header h1 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .demo-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .phone-container {
+            width: 350px;
+            height: 600px;
+            background: #000;
+            border-radius: 25px;
+            padding: 8px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            margin-top: 80px;
+        }
+        
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: #f0f0f0;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .whatsapp-header {
+            background: #075e54;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #25d366;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .chat-info h3 {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+        
+        .chat-info p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .chat-container {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background: #e5ddd5;
+        }
+        
+        .message {
+            margin: 8px 0;
+            max-width: 80%;
+            clear: both;
+        }
+        
+        .bot-message {
+            float: left;
+        }
+        
+        .user-message {
+            float: right;
+        }
+        
+        .message-content {
+            padding: 8px 12px;
+            border-radius: 7px;
+            font-size: 14px;
+            line-height: 1.4;
+            position: relative;
+        }
+        
+        .bot-message .message-content {
+            background: white;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+        }
+        
+        .user-message .message-content {
+            background: #dcf8c6;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+        }
+        
+        .timestamp {
+            font-size: 11px;
+            color: #999;
+            text-align: right;
+            margin-top: 2px;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        
+        .option-btn {
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .option-btn:hover {
+            background: #1db954;
+            transform: translateY(-1px);
+        }
+        
+        .emergency-btn {
+            background: #dc3545 !important;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .input-area {
+            background: #f0f0f0;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+        
+        .send-btn {
+            background: #25d366;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .send-btn:hover {
+            background: #1db954;
+            transform: scale(1.1);
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 7px;
+            margin: 8px 0;
+            float: left;
+            clear: both;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+        
+        .demo-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
+            padding: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .demo-footer p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .contact-info {
+            font-weight: bold;
+            color: #075e54;
+        }
+        
+        @media (max-width: 400px) {
+            .phone-container {
+                width: 90vw;
+                height: 70vh;
+                margin-top: 100px;
+                margin-bottom: 100px;
+            }
+            
+            .demo-header h1 {
+                font-size: 16px;
+            }
+            
+            .demo-header p {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-header">
+        <h1>🦷 Demo Chatbot para Clínicas Dentales</h1>
+        <p>Prueba cómo funciona un asistente virtual 24/7 | Nunca más pierdas pacientes</p>
+    </div>
+    
+    <div class="phone-container">
+        <div class="phone-screen">
+            <div class="whatsapp-header">
+                <div class="profile-pic">🦷</div>
+                <div class="chat-info">
+                    <h3>Clínica Dental SonríeMás</h3>
+                    <p>Asistente Virtual • En línea 24/7</p>
+                </div>
+            </div>
+            
+            <div class="chat-container" id="chatContainer">
+                <div class="message bot-message">
+                    <div class="message-content">
+                        ¡Hola! 👋 Soy el asistente virtual de Clínica Dental SonríeMás. 
+                        <br><br>Estoy disponible 24/7 para ayudarte. ¿Qué necesitas?
+                        <div class="options">
+                            <button class="option-btn" onclick="selectOption('agendar')">📅 Agendar cita</button>
+                            <button class="option-btn" onclick="selectOption('horarios')">🕐 Ver horarios</button>
+                            <button class="option-btn emergency-btn" onclick="selectOption('emergencia')">🚨 EMERGENCIA DENTAL</button>
+                            <button class="option-btn" onclick="selectOption('precios')">💰 Consultar precios</button>
+                        </div>
+                    </div>
+                    <div class="timestamp">Ahora</div>
+                </div>
+                
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dots">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="input-area">
+                <input type="text" class="message-input" id="messageInput" placeholder="Escribe tu consulta..." onkeypress="handleKeyPress(event)">
+                <button class="send-btn" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="demo-footer">
+        <p>💡 <strong>Imagina esto funcionando en tu clínica las 24 horas</strong></p>
+        <p class="contact-info">¿Te interesa? Contáctame: [TU WHATSAPP] | [TU EMAIL]</p>
+        <p style="font-size: 12px; color: #666;">Demo creado por [TU NOMBRE] - Desarrollador de Agentes IA</p>
+    </div>
+    
+    <script>
+        const responses = {
+            'agendar': {
+                text: 'Perfecto! 📋 Para agendar tu cita necesito:\n\n👤 Nombre completo\n📞 Número de contacto\n📅 Fecha que prefieres\n🕐 Horario que te acomoda\n🦷 Tipo de consulta (limpieza, dolor, revisión, etc.)\n\n¿Podrías darme esta información?',
+                options: ['👤 Completar datos ahora', '📞 Prefiero que me llamen', '📱 Enviar por WhatsApp', '🔙 Volver al menú']
+            },
+            'horarios': {
+                text: '🕐 Horarios de atención:\n\n📅 **Lunes a Viernes:** 8:00 - 20:00\n📅 **Sábados:** 9:00 - 14:00\n📅 **Domingos:** Solo emergencias\n\n📍 **Dirección:** Av. Principal 123, Las Condes\n📞 **Teléfono:** +56 9 1234 5678\n🅿️ **Estacionamiento gratuito disponible**',
+                options: ['📅 Agendar cita', '🗺️ Ver en Google Maps', '🚗 Info estacionamiento', '🔙 Volver al menú']
+            },
+            'emergencia': {
+                text: '🚨 **EMERGENCIA DENTAL DETECTADA**\n\n📞 **Línea directa 24/7:** +56 9 8765 4321\n👨‍⚕️ **Dr. Martínez disponible ahora**\n\n⚡ **Respuesta inmediata garantizada**\n🏥 **Si es muy grave, ve a urgencias**\n\n📍 **Ubicación:** Av. Principal 123, Las Condes\n\n*Presiona "Llamar ahora" para conexión directa*',
+                options: ['📞 Llamar ahora', '📍 Ver ubicación urgencia', '📱 Enviar foto del problema', '🔙 Volver al menú']
+            },
+            'precios': {
+                text: '💰 **Precios referenciales 2024:**\n\n🔍 Consulta + evaluación: $25.000\n🦷 Limpieza profesional: $35.000\n🔧 Obturación (tapadura): $45.000\n👑 Corona porcelana: $180.000\n🦷 Extracción simple: $40.000\n✨ Blanqueamiento: $120.000\n\n💳 **Facilidades de pago disponibles**\n🏥 **Convenios Fonasa e Isapres**',
+                options: ['📅 Agendar evaluación', '💳 Ver medios de pago', '🏥 Info seguros', '🔙 Volver al menú']
+            }
+        };
+        
+        function selectOption(option) {
+            addUserMessage(getOptionText(option));
+            setTimeout(() => {
+                showTyping();
+                setTimeout(() => {
+                    hideTyping();
+                    addBotMessage(responses[option]);
+                }, 1500);
+            }, 500);
+        }
+        
+        function getOptionText(option) {
+            const texts = {
+                'agendar': '📅 Quiero agendar una cita',
+                'horarios': '🕐 Ver horarios de atención',
+                'emergencia': '🚨 Tengo una emergencia dental',
+                'precios': '💰 Consultar precios de tratamientos'
+            };
+            return texts[option];
+        }
+        
+        function addUserMessage(text) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.innerHTML = `
+                <div class="message-content">${text}</div>
+                <div class="timestamp">${getCurrentTime()}</div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        function addBotMessage(response) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message';
+            
+            let optionsHtml = '';
+            if (response.options) {
+                optionsHtml = '<div class="options">';
+                response.options.forEach(option => {
+                    let buttonClass = 'option-btn';
+                    if (option.includes('EMERGENCIA') || option.includes('Llamar ahora')) {
+                        buttonClass += ' emergency-btn';
+                    }
+                    
+                    if (option === '🔙 Volver al menú') {
+                        optionsHtml += `<button class="${buttonClass}" onclick="backToMenu()">${option}</button>`;
+                    } else {
+                        optionsHtml += `<button class="${buttonClass}" onclick="handleGenericOption('${option}')">${option}</button>`;
+                    }
+                });
+                optionsHtml += '</div>';
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    ${response.text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
+                    ${optionsHtml}
+                </div>
+                <div class="timestamp">${getCurrentTime()}</div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        function backToMenu() {
+            addUserMessage('🔙 Volver al menú principal');
+            setTimeout(() => {
+                showTyping();
+                setTimeout(() => {
+                    hideTyping();
+                    const welcomeResponse = {
+                        text: '¿En qué más puedo ayudarte? 😊\n\nRecuerda que estoy disponible 24/7 para cualquier consulta.',
+                        options: [
+                            '📅 Agendar cita',
+                            '🕐 Ver horarios', 
+                            '🚨 EMERGENCIA DENTAL',
+                            '💰 Consultar precios'
+                        ]
+                    };
+                    addBotMessage(welcomeResponse);
+                }, 1000);
+            }, 500);
+        }
+        
+        function handleGenericOption(option) {
+            addUserMessage(option);
+            setTimeout(() => {
+                showTyping();
+                setTimeout(() => {
+                    hideTyping();
+                    let response = '';
+                    switch(option) {
+                        case '👤 Completar datos ahora':
+                            response = '📋 Perfecto! Por favor compárteme:\n\n• Nombre completo\n• Teléfono\n• Fecha preferida\n• Horario preferido\n• Motivo de la consulta\n\nPuedes escribirlo todo junto o uno por uno. 😊';
+                            break;
+                        case '📞 Prefiero que me llamen':
+                            response = '📞 Perfecto! Solo necesito tu número de teléfono y te llamaremos en los próximos 15 minutos para agendar tu cita.\n\n¿Cuál es tu número de contacto?';
+                            break;
+                        case '📱 Enviar por WhatsApp':
+                            response = '📱 Excelente! Te voy a conectar directamente con nuestro WhatsApp para que completes el agendamiento de forma privada.\n\n*Clic aquí para abrir WhatsApp: wa.me/56912345678*';
+                            break;
+                        case '🗺️ Ver en Google Maps':
+                            response = '📍 **Ubicación exacta:**\n\nAv. Principal 123, Las Condes, Santiago\n\n*En una implementación real, aquí se abriría Google Maps automáticamente*\n\n🚇 Metro más cercano: Los Leones (L6)\n🚌 Buses: 210, 516, C03';
+                            break;
+                        case '🚗 Info estacionamiento':
+                            response = '🅿️ **Estacionamiento:**\n\n✅ Gratuito para pacientes\n✅ 20 espacios disponibles\n✅ Acceso por calle lateral\n✅ Seguridad 24/7\n✅ Espacios para discapacitados\n\n⏰ Disponible durante horarios de atención';
+                            break;
+                        case '📞 Llamar ahora':
+                            response = '📞 **Conectando con Dr. Martínez...**\n\n*En una implementación real, esto iniciaría la llamada automáticamente*\n\n**Mientras tanto:**\n• Mantén la calma\n• Si hay sangrado, presiona con gasa limpia\n• Aplica frío externo si hay inflamación\n\n**El doctor te atenderá en 2-3 minutos**';
+                            break;
+                        case '📍 Ver ubicación urgencia':
+                            response = '🚨 **UBICACIÓN DE EMERGENCIA:**\n\nAv. Principal 123, Las Condes\n*Entrada por urgencias (lateral derecho)*\n\n🏥 **Si no puedes llegar:**\nHospital Alemán: Av. Vitacura 5951\nClínica Santa María: Av. Santa María 0500\n\n📞 Mantente en contacto: +56 9 8765 4321';
+                            break;
+                        case '📱 Enviar foto del problema':
+                            response = '📸 **Envío de fotografías:**\n\nPara evaluación rápida, envía foto del problema al WhatsApp:\n\n📱 **+56 9 8765 4321**\n\n**Tips para buena foto:**\n• Buena iluminación\n• Enfoque en la zona afectada\n• Si es posible, varias ángulos\n\n⚡ **Respuesta en menos de 5 minutos**';
+                            break;
+                        case '📅 Agendar evaluación':
+                            response = '📅 **Evaluación diagnóstica:**\n\nIncluye:\n✅ Examen clínico completo\n✅ Radiografías si es necesario\n✅ Plan de tratamiento detallado\n✅ Presupuesto personalizado\n\n💰 **Precio:** $25.000\n💳 **Se descuenta del tratamiento**\n\n¿Cuándo te acomoda mejor?';
+                            break;
+                        case '💳 Ver medios de pago':
+                            response = '💳 **Medios de pago aceptados:**\n\n💰 Efectivo (10% descuento)\n💳 Débito y Crédito (todas)\n🏦 Transferencia bancaria\n📱 Webpay, Khipu\n💳 Financiamiento hasta 12 cuotas sin interés\n📄 Cheques al día y fecha\n\n🏥 **Convenios:**\nFonasa, Isapres, seguros complementarios';
+                            break;
+                        case '🏥 Info seguros':
+                            response = '🏥 **Convenios y seguros:**\n\n✅ **Fonasa:** Atención nivel libre elección\n✅ **Todas las Isapres**\n✅ **Seguros complementarios**\n✅ **Seguros dentales**\n\n📋 **Reembolsos:**\n• Presentamos bonos directamente\n• Ayudamos con trámites de reembolso\n• Facturación automática a seguros\n\n💼 **Convenios empresariales disponibles**';
+                            break;
+                        default:
+                            response = 'Gracias por tu consulta. ¿Hay algo más en lo que pueda ayudarte? 😊\n\nRecuerda que estoy disponible 24/7 para cualquier duda o emergencia.';
+                    }
+                    addBotMessage({text: response, options: ['🔙 Volver al menú']});
+                }, 1200);
+            }, 500);
+        }
+        
+        function showTyping() {
+            document.getElementById('typingIndicator').style.display = 'block';
+            scrollToBottom();
+        }
+        
+        function hideTyping() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+        
+        function getCurrentTime() {
+            const now = new Date();
+            return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        }
+        
+        function scrollToBottom() {
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (message) {
+                addUserMessage(message);
+                input.value = '';
+                
+                // Detectar emergencias por palabras clave
+                const emergencyKeywords = ['dolor', 'duele', 'sangre', 'golpe', 'roto', 'emergencia', 'urgente', 'ahora'];
+                const isEmergency = emergencyKeywords.some(keyword => 
+                    message.toLowerCase().includes(keyword)
+                );
+                
+                setTimeout(() => {
+                    showTyping();
+                    setTimeout(() => {
+                        hideTyping();
+                        if (isEmergency) {
+                            addBotMessage({
+                                text: '🚨 **DETECTÉ UNA POSIBLE EMERGENCIA**\n\nTe conecto inmediatamente con nuestro servicio de urgencia:\n\n📞 **Llamar ahora: +56 9 8765 4321**\n👨‍⚕️ **Dr. Martínez disponible**\n\n¿Necesitas que te llame yo directamente?',
+                                options: ['📞 Sí, llámenme ahora', '📍 Ver ubicación urgencia', '🔙 Volver al menú']
+                            });
+                        } else {
+                            addBotMessage({
+                                text: 'Gracias por tu mensaje. He registrado tu consulta y nuestro equipo te contactará pronto para darte una respuesta personalizada. 😊\n\n📞 Si es urgente, llámanos al +56 9 1234 5678\n\n¿Hay algo más en lo que pueda ayudarte mientras tanto?',
+                                options: ['📞 Contacto directo', '🔙 Volver al menú']
+                            });
+                        }
+                    }, 2000);
+                }, 500);
+            }
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+</body>
+</html>
+``` 
